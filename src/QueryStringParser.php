@@ -4,6 +4,7 @@ namespace Kdubuc\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use function GuzzleHttp\Psr7\parse_query;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -22,32 +23,8 @@ final class QueryStringParser implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $server_request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        // Initialize the results array
-        $results = [];
-
-        // Loop on current query string splited on outer delimiter
-        foreach (explode('&', $server_request->getUri()->getQuery()) as $pair) {
-            // Split into name and value
-            [$name, $value] = explode('=', $pair, 2);
-
-            // URL decode
-            $name  = rawurldecode($name);
-            $value = rawurldecode($value);
-
-            // If name already exists
-            if (isset($results[$name])) {
-                // Stick multiple values into an array
-                if (\is_array($results[$name])) {
-                    $results[$name][] = $value;
-                } else {
-                    $results[$name] = [$results[$name], $value];
-                }
-            }
-            // Otherwise, simply stick it in a scalar
-            else {
-                $results[$name] = $value;
-            }
-        }
+        // Parse a query string into an associative array using Guzzle
+        $results = parse_query($server_request->getUri()->getQuery());
 
         // Build the new request with the correct query string
         $server_request = $server_request->withUri($server_request->getUri()->withQuery(http_build_query($results)));
