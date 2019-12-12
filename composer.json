@@ -1,0 +1,42 @@
+{
+    "name": "kdubuc/query-string-parser",
+
+    "description": "PSR15 Query String Parser",
+
+    "keywords": ["psr15", "psr7", "query string", "parse_str"],
+
+    "homepage": "https://github.com/kdubuc/query-string-parser",
+
+    "license": "CECILL-2.1",
+
+    "authors": [
+        {
+            "role": "Developer",
+            "name": "Kevin DUBUC",
+            "email": "kevindubuc62@gmail.com",
+            "homepage": "http://kevindubuc.fr"
+        }
+    ],
+
+    "require": {
+        "php": "^7.1",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0"
+    },
+
+    "require-dev": {
+        "kdubuc/php-cs-fixer-rules": "^1.0",
+        "phpunit/phpunit": "^8.0",
+        "guzzlehttp/psr7": "^1.5"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Kdubuc\\Middleware\\": "src/"
+        }
+    },
+
+    "prefer-stable": true,
+
+    "minimum-stability": "dev"
+}
