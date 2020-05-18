@@ -24,10 +24,15 @@ final class QueryStringParser implements MiddlewareInterface
     public function process(ServerRequestInterface $server_request, RequestHandlerInterface $handler) : ResponseInterface
     {
         // Parse a query string into an associative array using Guzzle
-        $results = parse_query($server_request->getUri()->getQuery());
+        // Handles duplicates fields.
+        $params = parse_query($server_request->getUri()->getQuery());
 
-        // Build the new request with the correct query string
-        $server_request = $server_request->withUri($server_request->getUri()->withQuery(http_build_query($results)));
+        // Build the new query string
+        $query_string = http_build_query($params);
+
+        // Assign new query string arguments
+        $server_request = $server_request->withUri($server_request->getUri()->withQuery($query_string));
+        $server_request = $server_request->withQueryParams($params);
 
         // Continue to process server request
         return $handler->handle($server_request);

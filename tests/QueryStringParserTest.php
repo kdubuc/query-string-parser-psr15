@@ -17,11 +17,11 @@ class QueryStringParserTest extends TestCase
         $server_request = new ServerRequest('GET', '/api?foo=bar&foo=baz', [], null, '1.1', []);
 
         $handler = new class() implements RequestHandlerInterface {
-            public $latest_query_params_used;
+            public $server_request;
 
             public function handle(ServerRequestInterface $server_request) : ResponseInterface
             {
-                $this->latest_query_params_used = $server_request->getUri()->getQuery();
+                $this->server_request = $server_request;
 
                 return new Response();
             }
@@ -29,6 +29,7 @@ class QueryStringParserTest extends TestCase
 
         $middleware->process($server_request, $handler);
 
-        $this->assertSame('foo[0]=bar&foo[1]=baz', urldecode($handler->latest_query_params_used));
+        $this->assertSame('foo[0]=bar&foo[1]=baz', urldecode($handler->server_request->getUri()->getQuery()));
+        $this->assertSame(['foo' => ['bar', 'baz']], $handler->server_request->getQueryParams());
     }
 }
