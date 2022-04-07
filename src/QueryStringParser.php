@@ -2,9 +2,9 @@
 
 namespace Kdubuc\Middleware;
 
+use GuzzleHttp\Psr7\Query;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use function GuzzleHttp\Psr7\parse_query;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -25,7 +25,7 @@ final class QueryStringParser implements MiddlewareInterface
     {
         // Parse a query string into an associative array using Guzzle
         // Handles duplicates fields.
-        $params = parse_query($server_request->getUri()->getQuery());
+        $params = Query::parse($server_request->getUri()->getQuery());
 
         // Build the new query string
         $query_string = http_build_query($params);
