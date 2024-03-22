@@ -16,6 +16,10 @@ class QueryStringParserTest extends TestCase
 
         $server_request = new ServerRequest('GET', '/api?foo=bar&foo=baz', [], null, '1.1', []);
 
+        $server_request = $server_request->withQueryParams([
+            'key' => 'value',
+        ]);
+
         $handler = new class() implements RequestHandlerInterface {
             public $server_request;
 
@@ -29,7 +33,7 @@ class QueryStringParserTest extends TestCase
 
         $middleware->process($server_request, $handler);
 
-        $this->assertSame('foo[0]=bar&foo[1]=baz', urldecode($handler->server_request->getUri()->getQuery()));
-        $this->assertSame(['foo' => ['bar', 'baz']], $handler->server_request->getQueryParams());
+        $this->assertSame('foo[0]=bar&foo[1]=baz&key=value', urldecode($handler->server_request->getUri()->getQuery()));
+        $this->assertSame(['foo' => ['bar', 'baz'], 'key' => 'value'], $handler->server_request->getQueryParams());
     }
 }

@@ -25,7 +25,7 @@ final class QueryStringParser implements MiddlewareInterface
     {
         // Parse a query string into an associative array using Guzzle
         // Handles duplicates fields.
-        $params = Query::parse($server_request->getUri()->getQuery());
+        $params = Query::parse($server_request->getUri()->getQuery()) + $server_request->getQueryParams();
 
         // Build the new query string
         $query_string = http_build_query($params);
